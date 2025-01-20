@@ -17,7 +17,7 @@ class HTMLNode:
                 attribute_string += f" {key}=\"{value}\""
             return attribute_string
         else:
-            raise ValueError("The props attribute value must be a non-empty dictionary")
+            return ""
 
     def __repr__(self):
         return f"""

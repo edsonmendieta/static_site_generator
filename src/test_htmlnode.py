@@ -10,13 +10,11 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(node1.props_to_html(), f" href=\"https://www.google.com\"")
         self.assertEqual(node2.props_to_html(), f" href=\"sun.com\" target=\"_blank\"")
 
-    def test_props_to_html_exception(self):
+    def test_props_to_html_with_no_props(self):
         node1 = HTMLNode(props={})
         node2 = HTMLNode()
-        with self.assertRaises(ValueError):
-            node1.props_to_html() 
-        with self.assertRaises(ValueError):
-            node2.props_to_html() 
+        self.assertEqual(node1.props_to_html(), "") 
+        self.assertEqual(node2.props_to_html(), "")
 
     def test_repr(self):
         node1 = HTMLNode()
@@ -44,7 +42,6 @@ class TestHTMLNode(unittest.TestCase):
         Props: {{'href': 'https://www.google.com'}}
         ----------------------------
         """
-        print(repr(node2))
         self.assertEqual(repr(node1), node1_string)
         self.assertEqual(repr(node2), node2_string)
 
