@@ -1,5 +1,5 @@
-from leafnode import LeafNode
 from enum import Enum
+from .leafnode import LeafNode
 
 class TextType(Enum):
     NORMAL = "normal"

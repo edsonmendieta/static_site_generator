@@ -1,12 +1,49 @@
 import unittest
+import re
 
 from typing import List
-from leafnode import LeafNode
-from textnode import TextType, TextNode 
-from helper_funcs import split_node_strings, split_nodes_delimiter
+from src.leafnode import LeafNode
+from src.textnode import TextType, TextNode 
+from src.helper_funcs import split_node_strings, split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 
 class TestHelperFuncs(unittest.TestCase):
 
+    def test_extract_markdown_links(self):
+        text1 = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        text2 = "This is text with a link [to boot dev]sadflj(https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+
+        self.assertEqual(
+            extract_markdown_links(text1), 
+            [
+                ('to boot dev', 'https://www.boot.dev'), 
+                ('to youtube', 'https://www.youtube.com/@bootdotdev')
+            ]
+        )
+        self.assertEqual(
+            extract_markdown_links(text2), 
+            [
+                ('to youtube', 'https://www.youtube.com/@bootdotdev')
+            ]
+        )
+
+    def test_extract_markdown_images(self):
+        text1 = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        text2 = "This is text with a !![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan]asdf(https://i.imgur.com/fJRm4Vk.jpeg)"
+
+        self.assertEqual(
+            extract_markdown_images(text1), 
+            [
+                ('rick roll', 'https://i.imgur.com/aKaOqIh.gif'), 
+                ('obi wan', 'https://i.imgur.com/fJRm4Vk.jpeg')
+            ]
+        )
+        self.assertEqual(
+            extract_markdown_images(text2), 
+            [
+                ('rick roll', 'https://i.imgur.com/aKaOqIh.gif')
+            ]
+        )
+    
     def test_split_node_strings(self):
         node1 = TextNode("Hello **my** name is **baseball**, ice.", TextType.NORMAL)
         node2 = TextNode("some words. more words **more words**", TextType.NORMAL)
