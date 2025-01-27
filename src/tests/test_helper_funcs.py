@@ -4,9 +4,28 @@ import re
 from typing import List
 from src.leafnode import LeafNode
 from src.textnode import TextType, TextNode 
-from src.helper_funcs import split_node_strings, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_link, split_nodes_image
+from src.helper_funcs import split_node_strings, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_link, split_nodes_image, text_to_textnodes
 
 class TestHelperFuncs(unittest.TestCase):
+
+    def test_text_to_textnodes(self):
+        text1 = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+
+        self.assertEqual(
+            text_to_textnodes(text1), 
+            [
+                TextNode("This is ", TextType.NORMAL),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.NORMAL),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.NORMAL),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.NORMAL),
+                TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" and a ", TextType.NORMAL),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ]
+        )
 
     def test_extract_markdown_links(self):
         text1 = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"

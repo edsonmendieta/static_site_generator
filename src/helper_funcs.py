@@ -4,6 +4,23 @@ from typing import List
 from .textnode import TextType, TextNode
 
 
+'''
+--------------------------------
+                                |
+Extract all markdown from text  |
+                                |
+--------------------------------
+'''
+def text_to_textnodes(text: str) -> List[TextNode]:
+    node = TextNode(text, TextType.NORMAL)
+
+    nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "*", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    nodes = split_nodes_image(nodes) 
+    nodes = split_nodes_link(nodes)
+
+    return nodes
 
 '''
 --------------------------------
@@ -174,3 +191,13 @@ def split_node_strings(node: TextNode, delimiter: str) -> List[int]:
             split_strings.append(sub)
 
     return split_strings
+
+
+
+
+def main():
+
+    print(text_to_textnodes("This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"))
+
+if __name__ == "__main__":
+    main()
