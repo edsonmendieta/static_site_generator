@@ -4,7 +4,7 @@ import re
 from typing import List
 from src.leafnode import LeafNode
 from src.textnode import TextType, TextNode 
-from src.helper_funcs import split_node_strings, split_nodes_delimiter, extract_markdown_images, extract_markdown_links
+from src.helper_funcs import split_node_strings, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_link, split_nodes_image
 
 class TestHelperFuncs(unittest.TestCase):
 
@@ -44,6 +44,66 @@ class TestHelperFuncs(unittest.TestCase):
             ]
         )
     
+    def test_split_nodes_link(self):
+
+        node1 = TextNode(
+        "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+        TextType.NORMAL
+        )
+        node2 = TextNode(
+        "[to boot dev](https://www.boot.dev) This is text with a [to youtube](https://www.youtube.com/@bootdotdev) link and",
+        TextType.NORMAL
+        )
+
+        self.assertEqual(
+            split_nodes_link([node1]),  
+                [
+                    TextNode("This is text with a link ", TextType.NORMAL),
+                    TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+                    TextNode(" and ", TextType.NORMAL),
+                    TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev")
+                ]
+            )
+        self.assertEqual(
+            split_nodes_link([node2]),  
+                [
+                    TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+                    TextNode(" This is text with a ", TextType.NORMAL),
+                    TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"),
+                    TextNode(" link and", TextType.NORMAL)
+                ]
+            )
+
+    def test_split_nodes_image(self):
+        node1 = TextNode(
+        "This is text with a link ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev)",
+        TextType.NORMAL
+        )
+        node2 = TextNode(
+        "![to boot dev](https://www.boot.dev) This is text with a ![to youtube](https://www.youtube.com/@bootdotdev) link and",
+        TextType.NORMAL
+        )
+
+        self.assertEqual(
+            split_nodes_image([node1]),  
+                [
+                    TextNode("This is text with a link ", TextType.NORMAL),
+                    TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
+                    TextNode(" and ", TextType.NORMAL),
+                    TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev")
+                ]
+            )
+        self.assertEqual(
+            split_nodes_image([node2]),  
+                [
+                    TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
+                    TextNode(" This is text with a ", TextType.NORMAL),
+                    TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev"),
+                    TextNode(" link and", TextType.NORMAL)
+                ]
+            )
+
+
     def test_split_node_strings(self):
         node1 = TextNode("Hello **my** name is **baseball**, ice.", TextType.NORMAL)
         node2 = TextNode("some words. more words **more words**", TextType.NORMAL)
@@ -80,5 +140,5 @@ class TestHelperFuncs(unittest.TestCase):
 
 
 
-if __name__ == "__name__":
+if __name__ == "_main_":
     unittest.main()
