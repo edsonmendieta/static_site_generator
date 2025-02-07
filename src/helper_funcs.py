@@ -5,11 +5,11 @@ from .textnode import TextType, TextNode
 
 
 '''
---------------------------------
-                                |
-Extract all markdown from text  |
-                                |
---------------------------------
+---------------------------------------
+                                       |
+Extract all inline markdown from text  |
+                                       |
+---------------------------------------
 '''
 def text_to_textnodes(text: str) -> List[TextNode]:
     node = TextNode(text, TextType.NORMAL)
