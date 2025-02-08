@@ -1,6 +1,6 @@
 import unittest
 
-from src.block_funcs import markdown_to_blocks, is_unordered_list, is_ordered_list
+from src.block_funcs import markdown_to_blocks, is_code, is_unordered_list, is_ordered_list
 
 
 class TestBlockFuncs(unittest.TestCase):
@@ -55,6 +55,15 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
                 '* This is the first list item in a list block\n* This is a list item\n* This is another list item'
             ]
         )
+    
+    def test_is_code(self):
+        test_str = "```;lajfldl\n;aksjdf; alsdkfj\n ;ajf a;jf```"
+        test_str2 = "` ``;lajfldl\n;aksjdf; alsdkfj\n ;ajf a;jf```"
+        test_str3 = "```;lajfldl\n;aksjdf; alsdkfj\n ;ajf a;jf`#`"
+
+        self.assertTrue(is_code(test_str))
+        self.assertFalse(is_code(test_str2))
+        self.assertFalse(is_code(test_str3))
     
     def test_is_unordered_list(self):
         test_str = """* wlfhh a;lkfj  a;fj\n- aflk;jaf;lkjaf ;lakf \n* aflkjafjl alfj"""

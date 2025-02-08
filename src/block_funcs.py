@@ -32,28 +32,22 @@ def block_to_block_type(block: str) -> str:
                         is_heading = False
                 if is_heading:
                     return "heading"
-        case '`':
-            if block[:3] == "```" and block[-3:] == "```":
-                return "code"
-        case '>':
-            is_quote_block = True
-            for line in block_lines:
-                if line[0] != '>':
-                    is_quote_block = False
-                    break
-            if is_quote_block:
-                return "quote"
-        case '*' | '-':
-            is_ul = True
-            for line in block_lines:
-                if line[0] + line[1] != "* " or line[0] + line[1] != "- ":
-                    is_ul = False
-                    break
-            if is_ul:
-                return "unordered_list"
     
     if is_ordered_list(block):
         return "ordered_list"
+
+def is_code(block: str) -> bool:
+    if block[:3] == "```" and block[-3:] == "```":
+        return True
+    return False
+
+def is_quote(block: str) -> bool:
+    block_lines = block.split('\n')
+    for line in block_lines:
+        if line[0] != '>':
+            return False
+    
+    return True
 
 def is_unordered_list(block:str) -> bool:
     block_lines = block.split('\n')
