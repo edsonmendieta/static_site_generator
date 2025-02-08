@@ -19,22 +19,33 @@ def markdown_to_blocks(markdown: str) -> List[str]:
 
 
 def block_to_block_type(block: str) -> str:
-    first_char = block[0]
-    block_lines = block.split('\n')
-
-    match first_char:
-        case '#':
-            heading = block_lines[0].split(" ")[0]
-            if len(heading) <= 6:
-                is_heading = True
-                for char in heading:
-                    if char != '#':
-                        is_heading = False
-                if is_heading:
-                    return "heading"
-    
+    if is_heading(block):
+        return "heading"
+    if is_code(block):
+        return "code"
+    if is_quote(block):
+        return "quote"
+    if is_unordered_list(block):
+        return "unordered_list"
     if is_ordered_list(block):
         return "ordered_list"
+    
+    return "paragraph"
+
+def is_heading(block: str) -> str:
+    block_lines = block.split('\n')
+    if block_lines[0][0] != "#":
+        return False
+    
+    heading = block_lines[0].split(" ")
+    if len(heading[0]) <= 6 and heading[1]:
+        for char in heading[0]:
+            if char != '#':
+                return False
+    else:
+        return False
+
+    return True
 
 def is_code(block: str) -> bool:
     if block[:3] == "```" and block[-3:] == "```":

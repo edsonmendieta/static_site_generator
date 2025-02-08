@@ -1,6 +1,6 @@
 import unittest
 
-from src.block_funcs import markdown_to_blocks, is_code, is_unordered_list, is_ordered_list
+from src.block_funcs import markdown_to_blocks, block_to_block_type, is_heading, is_code, is_unordered_list, is_ordered_list
 
 
 class TestBlockFuncs(unittest.TestCase):
@@ -56,6 +56,36 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
             ]
         )
     
+    def test_block_to_block_type(self):
+        test_str = "### A heading\nalsd;fj\nas;ldf"
+        test_str2 = "```;lajfldl\n;aksjdf; alsdkfj\n ;ajf a;jf```"
+        test_str3 = """* wlfhh a;lkfj  a;fj\n- aflk;jaf;lkjaf ;lakf \n* aflkjafjl alfj"""
+        test_str4 = """1. asdl;fkjasdf\n2. asl;dfkja;sdf as;dja\n3. lkj; alskjf lkajf;"""
+        test_str5 = "as;ldkf asdl;fkj ;alkdfj als;kdjf ;adf"
+
+        self.assertEqual(block_to_block_type(test_str), "heading")
+        self.assertEqual(block_to_block_type(test_str2), "code")
+        self.assertEqual(block_to_block_type(test_str3), "unordered_list")
+        self.assertEqual(block_to_block_type(test_str4), "ordered_list")
+        self.assertEqual(block_to_block_type(test_str5), "paragraph")
+    
+    def test_is_heading(self):
+        test_str = "### A heading\nalsd;fj\nas;ldf"
+        test_str2 = "## # A heading\nalsd;fj\nas;ldf"
+        test_str3 = " ## # A heading\nalsd;fj\nas;ldf"
+        test_str4 = "####### A heading\nalsd;fj\nas;ldf"
+        test_str5 = "###*### A heading\nalsd;fj\nas;ldf"
+        test_str6 = "# A heading\nalsd;fj\nas;ldf"
+        test_str7 = "# # A heading\nalsd;fj\nas;ldf"
+
+        self.assertTrue(is_heading(test_str))
+        self.assertTrue(is_heading(test_str2))
+        self.assertFalse(is_heading(test_str3))
+        self.assertFalse(is_heading(test_str4))
+        self.assertFalse(is_heading(test_str5))
+        self.assertTrue(is_heading(test_str6))
+        self.assertTrue(is_heading(test_str7))
+
     def test_is_code(self):
         test_str = "```;lajfldl\n;aksjdf; alsdkfj\n ;ajf a;jf```"
         test_str2 = "` ``;lajfldl\n;aksjdf; alsdkfj\n ;ajf a;jf```"
